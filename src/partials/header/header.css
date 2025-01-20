@@ -1,0 +1,16 @@
+header.header {
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #dddddd;
+}
+
+header.header .menu {
+  display: flex;
+  align-items: center;
+}
+
+.header.header .menu-item {
+  margin-right: 20px;
+}

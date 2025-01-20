@@ -1,0 +1,23 @@
+.button-primary {
+  background-color: blue;
+  color: white;
+  font-weight: bold;
+}
+
+.button-danger {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.button-success {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.button-warning {
+  background-color: orange;
+  color: white;
+  font-weight: bold;
+}
