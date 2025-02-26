@@ -1,16 +1,114 @@
-header.header {
-  padding: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #dddddd;
+.header {
+    background-color: #87ceeb;
+    /* Màu xanh dương nhạt */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: white;
+    height: 60px;
+    /* Điều chỉnh chiều cao nếu cần */
 }
 
-header.header .menu {
-  display: flex;
-  align-items: center;
+.logo {
+    display: flex;
+    align-items: center;
 }
 
-.header.header .menu-item {
-  margin-right: 20px;
+.logo img {
+    height: 40px;
+    /* Điều chỉnh kích thước logo Transerco */
+    margin-right: 10px;
+}
+
+.hanoibus-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-item {
+    margin: 0;
+}
+
+.menu-item a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.menu-item a:hover {
+    color: #ffd700;
+    /* Màu vàng khi hover, tùy chỉnh nếu cần */
+}
+
+.hotline {
+    color: #ff0000;
+    /* Màu đỏ cho hotline */
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 15px;
+    /* Khoảng cách giữa hotline và nút Đăng nhập */
+}
+
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* Khoảng cách giữa hotline và nút Đăng nhập */
+}
+
+.button-primary {
+    background-color: #ff4500;
+    /* Màu cam đậm cho nút, phù hợp với giao diện */
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.button-primary:hover {
+    background-color: #ff6347;
+    /* Màu cam nhạt hơn khi hover */
+}
+
+
+/* Responsive design (tùy chọn) */
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    .logo,
+    .auth-section {
+        text-align: center;
+        width: 100%;
+    }
+    .auth-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .hotline {
+        margin-right: 0;
+    }
 }

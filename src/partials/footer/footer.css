@@ -1,6 +1,192 @@
-footer.footer {
-  padding: 40px 30px;
-  background-color: #001011;
-  color: #ffffff;
-  text-align: center;
+/* Footer */
+
+.footer {
+    padding: 30px 20px;
+    /* Tăng padding để footer cao hơn */
+    background-color: #001011;
+    color: #ffffff;
+    font-size: 14px;
+    /* Tăng kích thước chữ */
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+}
+
+
+/* Đảm bảo nội dung chính không bị footer che phủ */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+
+/* Nội dung chính */
+
+.main-content {
+    flex: 1;
+}
+
+
+/* Phần nội dung của footer */
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    /* Tăng khoảng cách giữa các phần */
+    max-width: 1300px;
+    /* Mở rộng chiều rộng */
+    margin: 0 auto;
+}
+
+
+/* Mỗi khu vực trong footer */
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    /* Tăng min-width để các mục không quá nhỏ */
+    margin-bottom: 20px;
+    /* Tăng khoảng cách giữa các phần */
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-section img {
+    height: 40px;
+    /* Tăng kích thước logo */
+    margin-right: 10px;
+    /* Tăng khoảng cách giữa logo và chữ */
+}
+
+.hanoibus-logo {
+    font-size: 20px;
+    /* Tăng font-size */
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-section h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    /* Tăng font-size tiêu đề */
+    font-weight: bold;
+    border-bottom: 1px solid #ffffff;
+    padding-bottom: 7px;
+    /* Tăng padding để chữ thoáng hơn */
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section li {
+    margin-bottom: 12px;
+}
+
+.footer-section a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-section a:hover {
+    color: #ffd700;
+}
+
+
+/* Phần liên hệ */
+
+.contact p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+
+/* Liên kết mạng xã hội */
+
+.social-links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.social-links a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.social-links a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    background-color: #000;
+    color: white;
+    padding: 20px;
+}
+
+
+/* Footer bottom */
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 35px 20px;
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-section {
+        min-width: 100%;
+    }
+    .logo-section {
+        justify-content: center;
+    }
+    .social-links {
+        justify-content: center;
+    }
 }
