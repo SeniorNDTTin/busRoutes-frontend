@@ -11,10 +11,15 @@ const getById = async (id: string) => {
   const response = (await request.get<IResponse<IBusRouteDetail>>(`/busRouteDetails/get/${id}`)).data;
   return response;
 }
+const getByRouteId = async (id: string) => {
+  const response = (await request.get<IResponse<IBusRouteDetail[]>>(`/admin/busRouteDetails/getRoute/${id}`)).data;
+  return response
+}
 
 const busRouteDetailService = {
   get,
-  getById
+  getById,
+  getByRouteId
 };
 
 export default busRouteDetailService;
