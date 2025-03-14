@@ -5,6 +5,7 @@ import BusRoute from "../pages/home/busroute"; // Import busroute.tsx
 import BusRouteDetail from "../pages/home/BusRouteDetail";
 import FindRouteDetail from "../pages/panalMap/findRouteDetai";
 import DetailRoute from "../pages/panalMap/detailRoute";
+import TicketPrice from "../pages/ticketPrice";
 
 function AppRoutes() {
   return (
@@ -18,6 +19,8 @@ function AppRoutes() {
         {/* Route công khai cho "Tìm đường" (không cần auth/admin) */}
         <Route path="/pages/home/busroute" element={<BusRoute />} />
         <Route path="/bus-route/:id" element={<BusRouteDetail />} />
+
+        <Route path="/pages/ticketprice" element={<TicketPrice />} />
       </Routes>
     </BrowserRouter>
   );
