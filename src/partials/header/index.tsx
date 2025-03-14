@@ -23,6 +23,9 @@ function Header() {
           <Link to="/pages/home/busroute">Danh Sách Tuyến</Link> 
         </li>
         <li className="menu-item">
+          <Link to="/pages/ticketPrice">Giá Vé</Link> 
+        </li>
+        <li className="menu-item">
           <Link to="/news">Tin tức</Link>
         </li>
         <li className="menu-item">
