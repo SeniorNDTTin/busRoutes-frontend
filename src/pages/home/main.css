@@ -6,6 +6,9 @@ body {
     font-size: 18px;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Bố cục tổng thể */
 
@@ -228,4 +231,43 @@ body {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.register-ticket-container {
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+.register-ticket-container .ant-card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.register-ticket-container .ant-card-head {
+    background-color: #f6ffed;
+    border-bottom: 1px solid #b7eb8f;
+}
+
+.register-ticket-container .ant-steps-item-title {
+    color: #1890ff;
+}
+
+.register-ticket-container .ant-steps-item-process .ant-steps-item-icon {
+    background: #1890ff;
+    border-color: #1890ff;
+}
+
+.register-ticket-container .ant-form-item-label>label {
+    color: #52c41a;
+    font-weight: 500;
+}
+
+.register-ticket-container .ant-btn-primary {
+    transition: all 0.3s ease;
+}
+
+.register-ticket-container .ant-btn-primary:hover {
+    background-color: #d46b08;
+    border-color: #d46b08;
 }
