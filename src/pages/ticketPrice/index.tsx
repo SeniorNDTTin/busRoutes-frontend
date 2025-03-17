@@ -6,7 +6,7 @@ import IOneWayTicketPrice from "../../interfaces/OneWayTicketPrices.ts";
 import IBusRoute from "../../interfaces/busRoute.ts";
 
 import monthTicketPriceService from "../../services/monthTicketPrice.service.ts";
-import oneWayTicketPriceService from "../../services/oneWayTicketPrices.ts.ts";
+import oneWayTicketPriceService from "../../services/oneWayTicketPrices.service.ts";
 import busRouteService from "../../services/busRoute.service.ts";
 
 import Header from "../../partials/header/index.tsx";
@@ -155,7 +155,7 @@ function TicketPrice() {
 
         // Xử lý vé lượt
         if (responseOneWay?.data) {
-          setOneWayTicketPrices(responseOneWay.data);
+          setOneWayTicketPrices(responseOneWay.data.data);
         } else {
           message.warning("Không có dữ liệu giá vé lượt.");
         }
