@@ -18,21 +18,10 @@ const create = async (customers: Partial<ICustomer>) => {
   return response;
 }
 
-const update = async (id: string, customers: Partial<ICustomer>) => {
-  const response = (await request.patch<IResponse<ICustomer>>(`/customers/update/${id}`, customers)).data;
-  return response;
-}
-
-const del = async (id: string) => {
-  const response = (await request.del<IResponse<ICustomer>>(`/customers/delete/${id}`)).data;
-  return response;
-}
 
 const customerService = {
   get,
   getById,
-  create,
-  update,
-  del
+  create
 };
 export default customerService;
