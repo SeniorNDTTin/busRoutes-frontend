@@ -9,7 +9,7 @@ const get = async () => {
 }
 
 const getById = async (id: string) => {
-  const response = (await request.get<IResponse<IWard>>(`/wards/get/${id}`)).data;
+  const response = (await request.get<IResponse<IWard>>(`/admin/wards/get/${id}`)).data;
   return response;
 }
 

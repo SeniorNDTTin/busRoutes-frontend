@@ -1,0 +1,229 @@
+
+.main_index{
+    margin-top: -1.9rem !important;
+
+     .home{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem ;
+
+        .search{
+            height: 20vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .item{
+                width: 60%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                // border: 2px dotted black;
+                // gap: 2rem;
+                .search_box{
+                    height: 60%;
+                    width: 100%;
+                    margin-left: 2.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.8rem;
+                    // color: rgb(70, 141, 255);
+
+                    .button{
+                        margin-left: -2rem;
+                    }
+                    .point{
+                        display: flex;
+                        width: 50%;
+                        justify-content: space-between;
+                        .label{
+                            width: 30%;
+                        }
+                        .startInput{
+                            width: 60%;
+                           
+                            .stopList{
+                                max-height:  calc(4 * 30px);
+                                overflow-y: auto;
+                                background-color: rgb(255, 255, 255);
+                                border-radius: 5px;
+                                position: absolute;
+                                width: 17.5%;
+                                z-index: 1000;   
+                                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                                padding: 0.5rem;
+                            }
+
+                            .stopList li {  
+                                padding: 5px 5px;   
+                                cursor: pointer;
+                            }
+                            .stopList li:hover{
+                                background-color: rgb(245, 245, 245) !important;
+                            }
+                            .stopList li:first-child{  
+                                background-color: rgb(245, 245, 245) !important;
+
+                            }
+
+                        }
+                        .startInput input {
+                            width: 100% !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .wrapper{
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+                .map{
+                    width: 100%;
+                    height: 100%;
+                }
+        }
+     }
+
+
+        .content{
+            width: 100%;
+            .listRoute{
+                max-height: 100vh;
+                overflow-y: auto;
+                width: 100%;
+                padding-right: 15px;
+                margin-top: 1rem;
+               
+                .itemRoute{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    .itemRoute1{
+                        width: 100%;
+                       background-color: rgba(204, 204, 204, 0.3);
+                       border-radius: 10px;
+                       padding-left: 10px;
+                    }
+                    .itemRoute1:hover{
+                        cursor: pointer;
+                        background-color: rgba(175, 175, 175, 0.3);
+                    }
+                }
+            }
+        }
+     
+     .detailPanal.open{
+        margin-left: -1.9rem;
+        background-color: aqua;
+        justify-content: space-between;
+        background-color:  white;
+        width: 27.9%;
+        position: absolute;
+        z-index: 9000;   
+        height: 112.7vh;
+        padding-left: 1.5rem;
+        box-shadow: 4px 3px 5px rgba(0, 0, 0, 0.3);
+    }
+    .detailPanal.closed{
+        display: none !important;
+         background-color: rgb(124, 130, 130);
+        //  margin-left: -30rem !important; 
+     }
+
+     .buttonEvent{
+       
+        position: absolute;
+        z-index: 9999;
+        // margin-left: 24.5rem;
+        margin-left: -1.2rem;
+        margin-top: 25rem;
+        height: 8vh;
+        width: 2.5rem;
+        border-radius: 0 15% 15% 0%;
+        box-shadow: 4px 3px 7px rgba(0, 0, 0, 0.3);
+     }
+
+     .buttonEvent.open{
+        margin-left: 24.5rem;
+        transition: margin-left -0.3s ease-in-out;
+    }
+}
+
+.search1 {
+    width: 100% !important; 
+    display: flex ;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px dotted black;
+    padding-bottom:  2rem;
+    .item1{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .search_box1{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+
+            .point1{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom:  1rem;
+                .startInput1{
+                    width: 57%;
+                    .stopList1{
+                        max-height:  calc(4 * 30px);
+                        overflow-y: auto;
+                        background-color: rgb(255, 255, 255);
+                        border-radius: 0 0 5px 5px;
+                        position: absolute;
+                        width: 53.4%;
+                        z-index: 1000;   
+                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                        padding: 0.5rem;
+                    }
+
+                    .stopList1 li {  
+                        padding: 5px 5px;   
+                        cursor: pointer;
+                    }
+                    .stopList1 li:hover{
+                        background-color: rgb(245, 245, 245) !important;
+                    }
+                    .stopList1 li:first-child{  
+                        background-color: rgb(245, 245, 245) !important;
+
+                    }
+
+                    .startInput1 input {
+                        width: 100% !important;
+                    }
+                }
+
+                .startInput1 input {
+                    width: 94%;
+                }
+
+            }
+        }
+    }
+}

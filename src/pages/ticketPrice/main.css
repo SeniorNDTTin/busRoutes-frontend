@@ -1,0 +1,127 @@
+
+/* ------- CSS TICKET PRICES ------- */
+/* Container tổng */
+.ticket-price-container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+    /* Màu nền của toàn trang */
+}
+
+/* Tiêu đề trang */
+.home-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Hiển thị khi đang tải */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+/* Thông báo lỗi */
+.error-message {
+    text-align: center;
+    color: red;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Tiêu đề bảng */
+.table-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333;
+}
+
+/* Tiêu đề tuyến */
+.route-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Định dạng cho bảng của Ant Design */
+.styled-table {
+    background-color: #eaeaea;
+    /* Màu nền chung cho bảng */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.styled-table .ant-table-thead>tr>th {
+    background-color: #4a90e2;
+    /* Màu nền tiêu đề bảng */
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+}
+
+.styled-table .ant-table-tbody>tr>td {
+    background-color: #f5f5f5;
+    /* Màu nền của các ô trong bảng */
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Hover cho các hàng của bảng */
+.styled-table .ant-table-tbody>tr:hover>td {
+    background-color: #d6e4ff;
+}
+
+/* Các bảng vé lượt nhóm theo tuyến */
+.ticket-tables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+
+.table-wrapper {
+    flex: 1 1 300px;
+    /* Chiều rộng tối thiểu của mỗi bảng */
+    max-width: 500px;
+}
+
+.monthly-tickets-panel {
+    display: flex;
+    flex-wrap: wrap;           /* Cho phép xuống dòng nếu không đủ chỗ */
+    justify-content: space-around;   /* Căn giữa hai bảng */
+    margin-bottom: 100px;       
+}  
+
+.table-wrapper {
+    flex: 1;
+    /* Mỗi bảng chiếm không gian ngang bằng nhau */
+    min-width: 0;
+    /* Tránh trường hợp tràn ngang */
+    background-color: #fff;
+    /* Nếu muốn bảng có nền trắng */
+    padding: 10px;
+    /* Khoảng cách bên trong */
+    border-radius: 8px;
+    /* Bo góc */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Đổ bóng nhẹ */
+}
+
+.table-subtitle {
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
+    color: black;
+}

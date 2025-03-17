@@ -9,7 +9,7 @@ const get = async () => {
 }
 
 const getById = async (id: string) => {
-  const response = (await request.get<IResponse<IStreet>>(`/streets/get/${id}`)).data;
+  const response = (await request.get<IResponse<IStreet>>(`/admin/streets/get/${id}`)).data;
   return response;
 }
 

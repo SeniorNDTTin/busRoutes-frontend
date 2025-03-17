@@ -17,25 +17,28 @@ function Header() {
       {/* Menu navigation */}
       <ul className="menu">
         <li className="menu-item">
-          <Link to="/services">Dịch vụ thường</Link>
+          <Link to="/services">Dịch vụ thường*</Link>
         </li>
         <li className="menu-item">
           <Link to="/pages/home/busroute">Danh Sách Tuyến</Link> 
         </li>
         <li className="menu-item">
-          <Link to="/news">Tin tức</Link>
+          <Link to="/pages/ticketPrice">Giá Vé</Link> 
         </li>
         <li className="menu-item">
-          <Link to="/routes">Lộ trình</Link>
+          <Link to="/news">Tin tức*</Link>
         </li>
         <li className="menu-item">
-          <Link to="/guide">Hướng dẫn</Link>
+          <Link to="/routes">Lộ trình*</Link>
         </li>
         <li className="menu-item">
-          <Link to="/feedback">Góp ý</Link>
+          <Link to="/guide">Hướng dẫn*</Link>
         </li>
         <li className="menu-item">
-          <Link to="/about">Giới thiệu</Link>
+          <Link to="/feedback">Góp ý*</Link>
+        </li>
+        <li className="menu-item">
+          <Link to="/about">Giới thiệu*</Link>
         </li>
       </ul>
 
