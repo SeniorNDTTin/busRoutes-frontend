@@ -41,7 +41,31 @@ const RegisterTicket = () => {
   const [form] = Form.useForm();
 
   const quantity = useWatch("quantity", form);
-
+  const checkEmailDuplicate = async (_: any, value: string) => {
+    if (!value) return Promise.resolve();
+    try {
+      const response = await customerService.findByEmail(value);
+      if (response.code === 200 && response.data) {
+        return Promise.reject(new Error("Email đã được sử dụng.Vui lòng chọn email khác"));
+      }
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(new Error("Lỗi khi kiểm tra email. Vui lòng thử lại."));
+    }
+  };
+  
+  const checkPhoneDuplicate = async (_: any, value: string) => {
+    if (!value) return Promise.resolve();
+    try {
+      const response = await customerService.findByPhone(value);
+      if (response.code === 200 && response.data) {
+        return Promise.reject(new Error("Số điện thoại đã được sử dụng.Vui lòng chọn số điện thoại khác"));
+      }
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(new Error("Lỗi khi kiểm tra số điện thoại. Vui lòng thử lại."));
+    }
+  };
   useEffect(() => {
     if (monthTicketPrice && quantity) {
       const total = quantity * monthTicketPrice.price;
@@ -142,20 +166,21 @@ const sendConfirmationEmail = async () => {
     
     // Chi tiết dữ liệu được sử dụng cho email
     const templateParams = {
-      to_email: formValues.email,
+      to_email: formValues.email, // Email khách hàng
       to_name: formValues.fullName,
       route_name: busRoute.name,
       ticket_id: monthTicketData._id,
       register_date: monthTicketData.registerDate,
       expired_date: monthTicketData.expiredDate,
       quantity: formValues.quantity,
-      total_amount: typeof formValues.totalAmount === 'string' 
-        ? formValues.totalAmount 
-        : formValues.totalAmount.toLocaleString() + " VNĐ",
+      total_amount:
+        typeof formValues.totalAmount === "string"
+          ? formValues.totalAmount
+          : formValues.totalAmount.toLocaleString() + " VNĐ",
       payment_method: formValues.paymentMethod === "cash" ? "Tiền mặt" : "Chuyển khoản",
       company_name: "Hệ Thống Tuyến Bus Cần Thơ",
       customer_service: "1900xxxx",
-      website: "https://company-xyz.com"
+      website: "https://company-xyz.com",
     };
     
     console.log("Chi tiết template params:", JSON.stringify(templateParams, null, 2));
@@ -372,11 +397,7 @@ const sendConfirmationEmail = async () => {
   return (
     <div className="register-ticket-container">
       <Card
-        title={
-          <div style={{ textAlign: "center", color: "#52c41a" }}>
-            Đăng ký vé tháng Online - {busRoute?.name}
-          </div>
-        }
+        title={<div style={{ textAlign: "center", color: "#52c41a" }}>Đăng ký vé tháng Online - {busRoute?.name}</div>}
         bordered={false}
         style={{ maxWidth: 800, margin: "0 auto", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
       >
@@ -395,14 +416,42 @@ const sendConfirmationEmail = async () => {
           >
             <h3 style={{ color: "#52c41a", marginBottom: 16 }}>Thông tin cá nhân</h3>
             <div style={{ display: "grid", gap: "16px", gridTemplateColumns: "1fr 1fr" }}>
-              <Form.Item name="fullName" label="Họ và tên" rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}>
+              <Form.Item
+                name="fullName"
+                label="Họ và tên"
+                rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+              >
                 <Input placeholder="Nhập họ và tên" size="large" />
               </Form.Item>
-              <Form.Item name="email" label="Email" rules={[{ required: true, type: "email", message: "Vui lòng nhập email hợp lệ!" }]}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, type: "email", message: "Vui lòng nhập email hợp lệ!" },
+                  { validator: checkEmailDuplicate },
+                ]}
+              >
                 <Input placeholder="Nhập email" size="large" />
               </Form.Item>
-              <Form.Item name="phone" label="Số điện thoại" rules={[{ required: true, pattern: /^[0-9]{10}$/, message: "Vui lòng nhập số điện thoại 10 chữ số!" }]}>
-                <Input placeholder="Nhập số điện thoại" size="large" />
+              <Form.Item
+                name="phone"
+                label="Số điện thoại"
+                rules={[
+                  { required: true, pattern: /^[0-9]{10}$/, message: "Vui lòng nhập đúng 10 chữ số!" },
+                  { validator: checkPhoneDuplicate },
+                ]}
+              >
+                <Input
+                  placeholder="Nhập số điện thoại"
+                  size="large"
+                  maxLength={10}
+                  onKeyPress={(e) => {
+                    const charCode = e.charCode;
+                    if (charCode < 48 || charCode > 57) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
               </Form.Item>
             </div>
 
