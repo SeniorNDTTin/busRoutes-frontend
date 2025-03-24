@@ -515,7 +515,6 @@ const handleCurrentLocation = () =>{
   navigator.geolocation.getCurrentPosition (
     (position) => {
       const { latitude, longitude } = position.coords;
-
       setNameCurrentLocation("Vị trí hiện tại")
       setShowsuggestStart(false)
       setCurrentLocation({ latitude, longitude });
@@ -639,7 +638,18 @@ const handleSelect = (id: string , name : string ) => {
                     <div className={styles.point1}>
                       <label className={styles.label1}>Điểm đi:</label>
                       <div className={styles.startInput1}>
-                          <input type="text"  value={ nameCurrentLocation !== "" ? nameCurrentLocation :startPoint.name } onChange={(e) => setStartPoint({...startPoint, name: e.target.value})} placeholder="Chọn điểm xuất phát"  className="route-input" onClick={ handleInputStart} />
+                          <input type="text"  value={ nameCurrentLocation !== "" ? nameCurrentLocation :startPoint.name }  
+                            onChange={(e) => {
+                              setStartPoint({ ...startPoint, name: e.target.value });  
+
+                              if (e.target.value=== "") {
+                                setNameCurrentLocation("");  
+                              } else if (e.target.value !== "Vị trí hiện tại") {
+                                setNameCurrentLocation(e.target.value);
+                              }
+                            }} 
+                            placeholder="Chọn điểm xuất phát"  className="route-input" 
+                            onClick={ handleInputStart} />
 
                             {showSuggestStart && (
                               <ul className={styles.stopList1}>
