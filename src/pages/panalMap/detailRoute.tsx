@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { Button,  Tabs} from "antd";
 import type { TabsProps } from 'antd';
-import { toast } from "react-toastify";
-import { ArrowLeftOutlined, CaretLeftOutlined } from "@ant-design/icons";
 
+import { CaretLeftOutlined } from "@ant-design/icons";
 import { MapContainer, TileLayer, Marker, Popup , Polyline} from "react-leaflet";
+
+// import Map, { Marker, Popup } from "react-map-gl";
+// import "mapbox-gl/dist/mapbox-gl.css";
+// import mapboxgl from "mapbox-gl";
 
 import "leaflet/dist/leaflet.css";
 import styles from "../../assets/css/index/findRouteDetail.module.scss"
@@ -26,17 +29,24 @@ import IWard from "../../interfaces/ward";
 import IDistrict from "../../interfaces/district";
 import directionService from "../../services/direction.service";
 import IDirection from "../../interfaces/direction";
+import { details, div, p } from "framer-motion/client";
+import DirectionRoute from "../../component/directionRoute";
 
 
 
 interface Position {
   lat: number;
   lng: number;
+
 }
 
 const DetailRoute = () =>{
+
+  const { id } = useParams();
   const location = useLocation();
   const routeData = location.state?.routeData;
+  const routeCoords = location.state?.routeCoords; 
+  const color = location.state?.color; 
 
   const currentLocation = location.state?.currentLocation;
 
@@ -45,19 +55,6 @@ const DetailRoute = () =>{
     lat: 10.036718000266058,
     lng: 105.78768579479011,
   });
-
-  const [busRoute, setBusRoute] = useState<IBusRoute[]>([])
-  const [busRouteDetail, setBusRouteDetail] = useState<IBusRouteDetail[]>([]);
-  const [direction, setDirection] = useState<IDirection[]>([]);
-  
-  const [busAllStop, setBusAllStop] = useState<IBusStop[]>([]);
-  const [busStop, setBusStop] = useState<IBusStop[]>([]);
-  const [isOpen, setIsOpen] = useState(true)
-  
-  const [street, setStreet] = useState<IStreet[]>([])
-  const [wards, setWards] = useState<IWard[]>([])
-  const [districts, setDistricts] = useState<IDistrict[]>([])
-
   const busIcon = L.divIcon({
     html: `<div style="
             background-color: #65ffa5; 
@@ -87,44 +84,67 @@ const DetailRoute = () =>{
     popupAnchor: [0, -45] 
   });
   
+
+  const [busRoute, setBusRoute] = useState<IBusRoute[]>([])
+  const [busRouteDetail, setBusRouteDetail] = useState<IBusRouteDetail[]>([]);
+  const [direction, setDirection] = useState<IDirection[]>([]);
+  
+  const [busAllStop, setBusAllStop] = useState<IBusStop[]>([]);
+  const [busStop, setBusStop] = useState<IBusStop[]>([]);
+  const [isOpen, setIsOpen] = useState(true)
+  
+  const [street, setStreet] = useState<IStreet[]>([])
+  const [wards, setWards] = useState<IWard[]>([])
+  const [districts, setDistricts] = useState<IDistrict[]>([])
+
+
+  const prevStreet = useRef<IStreet[]>([]);
+  const prevWards = useRef<IWard[]>([]);
+  const prevDistricts = useRef<IDistrict[]>([]);
+  
+
   useEffect(() => {
     const fetchApi = async () => {
-        if (!routeData?._id) return;
+        if (!id) return;
 
         const [stops, details, directions, busRoutes] = await Promise.all([
             busStopService.get(),
-            busRouteDetailService.getByRouteId(routeData._id),
+            busRouteDetailService.getByRouteId(id as string),
             directionService.get(),
             busRouteService.get()
           ]);
                 
-          setBusAllStop(stops.data);
-          setBusRouteDetail(details.data);
-          setDirection(directions.data);
-          setBusRoute(busRoutes.data);
+          setBusAllStop(stops?.data ? stops.data : busAllStop);
+          setBusRouteDetail(details?.data ? details.data : busRouteDetail);
+          setDirection(directions?.data ? directions.data : direction);
+          setBusRoute(busRoutes?.data ? busRoutes.data : busRoute);
         };
         
         fetchApi();
         
-    }, [routeData]); 
+    }, [id]); 
     
+
     const filteredBusStops = useMemo(() => {
+     
         return busAllStop.filter(stop => 
-          busRouteDetail.some(detail => detail.busStopId === stop._id && detail.busRouteId === routeData._id)
+          busRouteDetail.some(detail => detail.busStopId === stop._id && detail.busRouteId === id)
         );
-      }, [busAllStop, busRouteDetail, routeData._id]);
-    
+      }, [busAllStop, busRouteDetail, id]);
+
     useEffect(() => {
-      if (filteredBusStops.length === 0) return;
-    
+      if (!filteredBusStops.length) return;
+
       const fetchStreets = async () => {
         const streetApi = await Promise.all(
             filteredBusStops.map(async (stop) => (await streetService.getById(stop.streetId)).data)
         );
-        setStreet(streetApi);
 
-        const stopFilter =  busAllStop.filter(stop => busRouteDetail.some(detail => detail.busStopId === stop._id && detail.busRouteId === routeData._id))
-        setBusStop(stopFilter)
+          if (JSON.stringify(prevStreet.current) !== JSON.stringify(streetApi)) {
+              prevStreet.current = streetApi;
+              setStreet(streetApi);
+          }
+        setBusStop(filteredBusStops)
       };
     
       fetchStreets();
@@ -137,31 +157,36 @@ const DetailRoute = () =>{
         const wardApi = await Promise.all(
           street.map(async (str) => (await wardService.getById(str.wardId)).data)
         );
-        setWards(wardApi);
+
+        if (JSON.stringify(prevWards.current) !== JSON.stringify(wardApi)) {
+            prevWards.current = wardApi;
+            setWards(wardApi);
+        }
       };
     
       fetchWards();
     }, [street]);
-  
+
     useEffect(() => {
+      if (!wards.length || JSON.stringify(prevWards.current) === JSON.stringify(wards)) return;
+      prevWards.current = wards;
       if (wards.length === 0) return;
     
       const fetchDistricts = async () => {
         const districtApi = await Promise.all(
           wards.map(async (w) => (await districtService.getById(w.districtId)).data)
         );
-        setDistricts(districtApi);
+
+        if (JSON.stringify(prevDistricts.current) !== JSON.stringify(districtApi)) {
+          prevDistricts.current = districtApi;
+          setDistricts(districtApi);
+        }
       };
     
       fetchDistricts();
     }, [wards]);
     
-  
 
-const formatCurrency= (value? : number) => {
-    if(!value) return '0';
-     return new Intl.NumberFormat("vi-VN").format(value)
-}
 
 const toggelePanal = () => {
   setIsOpen(!isOpen)
@@ -170,64 +195,24 @@ const toggelePanal = () => {
 const backIndex = () => {
     navigation(`/`)
 }
-
-    // const detailRoutes = routeData.busRouteId.map((id : string) => busRoute.find(route => route._id === id))
-    // const detailStops = routeData.stopId.map((id: string) => busAllStop.find(stop => stop._id === id))
-
-  const items: TabsProps['items'] = [
-
-    {
-      key: '1',
-      label: 'Danh Sách Tuyến Xe',
-      children:(   
-          <div>
-            <Button onClick={backIndex}>
-                    <ArrowLeftOutlined />
-            </Button>
-           
-            {routeData ? (
-                <div className={styles.detailRoute}>  
-                    <p style={{color: 'red', fontWeight: 'bold'}}> {routeData.name}</p>
-                    <p><strong>Độ dài tổng:</strong> {routeData.totalDistance} Km</p>
-                    <p><strong>Giá vé:</strong>  {formatCurrency(routeData.fullPrice)} VND</p>
-                    <p><strong>Thời gian tuyến:</strong> {routeData.time}</p>
-                    <p><strong>TGBD chuyến đầu:</strong> {routeData.firstFlightStartTime}</p>
-                    <p><strong>TGBD chuyến cuối:</strong> {routeData.lastFlightStartTime}</p>
-                    <p><strong>Giãn cách tuyến:</strong> {routeData.timeBetweenTwoFlight}</p>        
-
-                    {direction.length > 0 ? (
-                        direction.map((d) => {
-                            const stops = busRouteDetail.filter(r => r.directionId === d._id);
-                            const detailStop = busStop.filter(dt => stops.some(st => dt._id === st.busStopId));
-
-                            return (
-                            <p key={d._id}>
-                                <strong style={{
-                                backgroundColor: d.description === 'Xuôi' ? 'rgb(255, 221, 231)' : 'rgb(255, 241, 221)',
-                                padding: '2px', 
-                                marginRight: '5px'
-                                }}>
-                                {d.description === "Xuôi" ? "Lượt đi:" : "Lượt về:"}
-                                </strong>
-                                {detailStop.length > 0 ? detailStop.map(dt => dt.name).join(" ---> ") : ''}
-                            </p>
-                            );  
-                        })
-                        ) : (
-                        <p>Không xác định được chiều...</p>
-                    )}
-                </div>
-            ) : (                  
-                <div>Trống...</div>
-            )}
-
-          
-        </div>
-      )
-    },
- 
-  ];
-
+const items: TabsProps['items'] = [
+  {
+    key: '1',
+    label: 'Danh Sách Tuyến Xe',
+    children: routeData ? (
+      <DirectionRoute
+        routeData={routeData}
+        busRouteDetail={busRouteDetail}
+        busAllStop={busAllStop}
+        direction={direction}
+        backIndex={backIndex}
+      />
+    ) : (
+      <div>Trống...</div>
+    ),
+  },
+];
+    
   return (
     <main className={styles.main_index}>
        
@@ -270,18 +255,11 @@ const backIndex = () => {
                         <Popup>Vị trí hiện tại của bạn</Popup>
                       </Marker>
                     )} 
-                <Polyline 
-                    key={routeData._id}
-                    positions={
-                        busStop
-                        .filter(stop => busRouteDetail.some(detail => detail.busStopId === stop._id && detail.busRouteId === routeData._id))
-                        .map(stop => [stop.latitude, stop.longitude])
-                    } 
-                    color={'blue'}  
-                    weight={7} 
-                />
+                <Polyline  key={id}positions={routeCoords} color= {color}  weight={7} />
 
               </MapContainer> 
+
+                
             </div>
           </div>
       </div> 

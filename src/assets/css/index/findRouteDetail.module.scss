@@ -30,7 +30,7 @@
         transition: margin-left 0.3s ease-in-out;
         justify-content: space-between;
         background-color:  white;
-        width: 27.9%;
+        width: 32%;
         position: absolute;
         z-index: 9000;   
         height: 112.7vh;
@@ -76,7 +76,6 @@
        
         position: absolute;
         z-index: 9999;
-        // margin-left: 24.5rem;
         margin-left: -1.2rem;
         margin-top: 25rem;
         height: 8vh;
@@ -86,12 +85,25 @@
      }
 
      .buttonEvent.open{
-        margin-left: 24.5rem;
+        margin-left: 28.5rem;
         // transition: margin-left 0.3s ease-in-out;
     }
 
     .detailRoute{
         margin-top: 3rem ;
+        
+        .direction{
+         background-color: rgb(234, 252, 255);
+         padding: 0.2rem;
+          margin-right: 6px;
+          border-radius: 3px;
+        }
+        .directionReturn{
+         background-color: rgb(255, 234, 234);
+         padding: 0.2rem;
+          margin-right: 6px;
+          border-radius: 3px;
+        }
     }
 }
 
