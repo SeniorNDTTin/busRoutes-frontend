@@ -35,11 +35,15 @@ interface Position {
 const FindRouteDetail = () =>{
   const location = useLocation();
   const routeData = location.state?.routeData;
-  const shortestDistance = location.state?.shortestDistance;
+  console.log("routeData", routeData)
   const routeDirectly = location.state?.routeDirectly;
+  console.log("routeDirectly", routeDirectly)
   const currentLocation = location.state?.currentLocation;
+  console.log("currentLocation", currentLocation)
   const routeCoords = location.state?.routeCoords;
+  console.log("routeCoords", routeCoords)
   const colors = location.state?.colors;
+  console.log("colors", colors)
 
   const navigation = useNavigate()
   const [mapPosition, setMapPosition] = useState<Position>({
@@ -175,24 +179,24 @@ const detailStops = routeData.stopId.map((id: string) => busAllStop.find(stop =>
                 {routeDirectly ? (
                     <div className={styles.detailRoute}>                             
                         <p style={{color: 'red', fontWeight: 'bold'}}> {detailRoutes.map((route: { name: string }) => route?.name ).join(" ---> ")}</p>
-                        <p><strong>Độ Tài Tổng:</strong> {routeData.totalDistance} Km</p>
-                        <p><strong>Giá Tuyến:</strong>  {formatCurrency(routeDirectly.fullPrice)} VND</p>
-                        <p><strong>Thời Gian Tuyến:</strong> {routeDirectly.time}</p>
-                        <p><strong>TGBD Chuyến Đầu:</strong> {routeDirectly.firstFlightStartTime}</p>
-                       <p><strong>TGBD Chuyến Cuối:</strong> {routeDirectly.lastFlightStartTime}</p>
-                       <p><strong>Giãn Cách Tuyến:</strong> {routeDirectly.timeBetweenTwoFlight}</p>
-                       <p > 
-                            <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các Trạm Đi Qua: </span>
-                            {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")}
+                        <p><strong>Độ dài toàn tuyến:</strong> {routeDirectly.fullDistance} Km</p>
+                        <p><strong>Giá vé toàn tuyến:</strong>  {formatCurrency(routeDirectly.fullPrice)} VND</p>
+                        <p><strong>Thời gian toàn tuyến:</strong> {routeDirectly.time}</p>
+                        <p><strong>TGBD chuyến đầu:</strong> {routeDirectly.firstFlightStartTime}</p>
+                       <p><strong>TGBD chuyến cuối:</strong> {routeDirectly.lastFlightStartTime}</p>
+                       <p><strong>Giãn cách tuyến:</strong> {routeDirectly.timeBetweenTwoFlight}</p>
+                       <p style={{ marginTop : '2.5rem'}}> 
+                            <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các trạm đi qua: </span>
+                            {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")} 
+                            <span style={{color: 'blue', marginLeft: '1rem'}}>{'( ' + routeData.totalDistance  + ' Km )' }</span>
                        </p>
                     </div>
                 ): (            
                     <div className={styles.detailRoute}>
                         <p style={{color: 'red', fontWeight: 'bold'}}> {detailRoutes.map((route: { name: string }) => route?.name ).join(" ---> ")}</p>
-                        <p><strong>Độ Dài Tổng:</strong> {routeData.totalDistance} Km</p>
-                        <p><strong>Giá Tuyến:</strong>  VND</p>               
-                       <p > 
-                            <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các Trạm Đi Qua: </span>
+                        <p><strong>Độ dài tổng:</strong> {routeData.totalDistance} Km</p>       
+                       <p style={{ marginTop : '2.5rem'}}> 
+                            <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các trạm đi qua: </span>
                             {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")}
                        </p>
                     </div>

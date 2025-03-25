@@ -36,10 +36,10 @@ const DirectionRoute = ({ routeData, busRouteDetail, busAllStop, direction, back
       <div className={styles.detailRoute}>
         <p style={{ color: 'red', fontWeight: 'bold' }}>{routeData.name}</p>
         <p>
-          <strong>Độ dài tổng:</strong> {routeData.fullDistance} Km
+          <strong>Độ dài toàn tuyến:</strong> {routeData.fullDistance} Km
         </p>
         <p>
-          <strong>Giá vé:</strong> {formatCurrency(routeData.fullPrice)} VND
+          <strong>Giá vé toàn tuyến:</strong> {formatCurrency(routeData.fullPrice)} VND
         </p>
         <p>
           <strong>Thời gian tuyến:</strong> {routeData.time}
@@ -56,7 +56,7 @@ const DirectionRoute = ({ routeData, busRouteDetail, busAllStop, direction, back
 
         {direction.length > 0 ? (
           <>
-            <div>
+            <div className={styles.directionId}>
               {direction.map((dir) => {
                 if (dir.description === 'Lượt đi' || dir.description === 'Lượt về') {
                   const directionId = dir._id;

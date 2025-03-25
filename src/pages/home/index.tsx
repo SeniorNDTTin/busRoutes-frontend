@@ -261,7 +261,7 @@ const toggelePanal = () => {
     const data = await response.json();
   
     if (data.routes && data.routes.length > 0) {
-      return data.routes[0].distance; // Khoảng cách tính bằng mét
+      return data.routes[0].distance;
     }
   
     return 0;
@@ -318,7 +318,8 @@ const toggelePanal = () => {
         const stopCoordinates = await Promise.all(
           stopIds.map(async stop => (await busStopService.getById(stop as string)).data)
         );
-        const totalDistance = Math.round( (await getRouteDistance(stopCoordinates)) / 1000);
+        const totalDistance1 = await getRouteDistance(stopCoordinates);
+        const totalDistance = Math.round(totalDistance1 / 1000)
 
         commonRoutesData.push({ busRouteId: [routeId], stopId: stopIds, stopCoor: stopCoordinates, totalDistance });
       }
@@ -334,7 +335,9 @@ const toggelePanal = () => {
       const stopCoordinates = await Promise.all(
         stopId.map(async stop => (await busStopService.getById(stop)).data)
       );
-      const totalDistance = Math.round((await getRouteDistance(stopCoordinates)) / 1000)
+      const totalDistance1 = await getRouteDistance(stopCoordinates)
+      const totalDistance = Math.round(totalDistance1 / 1000)
+      
       otherRoutesData.push({ busRouteId, stopId, stopCoor: stopCoordinates, totalDistance });
       continue;
     }
@@ -542,8 +545,8 @@ const handleSelect = (id: string , name : string ) => {
               {busRoute.map(route => (               
                   <div className={styles.itemRoute1} onClick={() => handleRouteClick(route)}>
                     <p style={{color: 'red' , fontWeight: 'bold'}}>{route.name}</p>
-                    <p><strong>Độ dài tuyến:</strong> {route.fullDistance} Km</p>
-                    <p><strong>Giá vé:</strong> {formatCurrency(route.fullPrice)} VND</p>
+                    <p><strong>Độ dài toàn tuyến:</strong> {route.fullDistance} Km</p>
+                    <p><strong>Giá vé toàn tuyến:</strong> {formatCurrency(route.fullPrice)} VND</p>
                     <p><strong>Thời gian tuyến:</strong> {route.time}</p>
                   </div>
               ))}
@@ -637,9 +640,10 @@ const handleSelect = (id: string , name : string ) => {
                                       <p style={{color: 'red' , fontWeight: 'bold'}} >
                                           {matchedRoutes.map(r => r.name).join("")}
                                       </p>
-                                      <p><strong>Độ dài toàn tuyến:</strong> {route.totalDistance} Km</p>
-                                     <p><strong>Giá vé:</strong> {formatCurrency(r.fullPrice)} VND</p>
+                                      <p><strong>Độ dài toàn tuyến:</strong> {r.fullDistance} Km</p>
+                                     <p><strong>Giá vé toàn tuyến:</strong> {formatCurrency(r.fullPrice)} VND</p>
                                      <p><strong>Thời gian tuyến:</strong> {r.time}</p>
+                                     <div className={styles.totalDistance}>{route.totalDistance} Km</div>
                                 </div>)) : (<div></div>)
                           })}
                         </div>
@@ -659,8 +663,7 @@ const handleSelect = (id: string , name : string ) => {
                                     <p style={{color: 'red' , fontWeight: 'bold'}} >
                                           { matchedRoutes.map(r => r.name).join(" ---> ")}
                                     </p>
-                                    <p><strong>Độ dài toàn tuyến: </strong>{route.totalDistance} Km</p>
-                                    {/* <p><strong>Giá vé: </strong></p>                  */}
+                                    <div className={styles.totalDistance}>{route.totalDistance} Km</div>
                                 </div>                 
                             ) : (<div></div>)
                           })}
