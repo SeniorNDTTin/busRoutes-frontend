@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button,  Tabs} from "antd";
 import type { TabsProps } from 'antd';
 import { toast } from "react-toastify";
-import { ArrowLeftOutlined, CaretLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CaretLeftOutlined, RightCircleTwoTone } from "@ant-design/icons";
 
 import { MapContainer, TileLayer, Marker, Popup , Polyline} from "react-leaflet";
 
@@ -35,9 +35,10 @@ interface Position {
 const FindRouteDetail = () =>{
   const location = useLocation();
   const routeData = location.state?.routeData;
-  const shortestDistance = location.state?.shortestDistance;
   const routeDirectly = location.state?.routeDirectly;
   const currentLocation = location.state?.currentLocation;
+  const routeCoords = location.state?.routeCoords;
+  const colors = location.state?.colors;
 
   const navigation = useNavigate()
   const [mapPosition, setMapPosition] = useState<Position>({
@@ -171,32 +172,30 @@ const detailStops = routeData.stopId.map((id: string) => busAllStop.find(stop =>
             </Button>
            
                 {routeDirectly ? (
-                    <div className={styles.detailRoute}>                      
+                    <div className={styles.detailRoute}>                             
                         <p style={{color: 'red', fontWeight: 'bold'}}> {detailRoutes.map((route: { name: string }) => route?.name ).join(" ---> ")}</p>
-                        <p><strong>Độ dài tổng:</strong> {routeData.totalDistance} Km</p>
-                        <p><strong>Giá vé:</strong>  {formatCurrency(routeDirectly.fullPrice)} VND</p>
-                        <p><strong>Thời gian tuyến:</strong> {routeDirectly.time}</p>
+                        <p><strong>Độ dài toàn tuyến:</strong> {routeDirectly.fullDistance} Km</p>
+                        <p><strong>Giá vé toàn tuyến:</strong>  {formatCurrency(routeDirectly.fullPrice)} VND</p>
+                        <p><strong>Thời gian toàn tuyến:</strong> {routeDirectly.time}</p>
                         <p><strong>TGBD chuyến đầu:</strong> {routeDirectly.firstFlightStartTime}</p>
                        <p><strong>TGBD chuyến cuối:</strong> {routeDirectly.lastFlightStartTime}</p>
                        <p><strong>Giãn cách tuyến:</strong> {routeDirectly.timeBetweenTwoFlight}</p>
-                       <p > 
+                       <p style={{ marginTop : '2.5rem'}}> 
                             <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các trạm đi qua: </span>
-                            {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")}
+                            {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")} 
+                            <span style={{color: 'blue', marginLeft: '1rem'}}>{'( ' + routeData.totalDistance  + ' Km )' }</span>
                        </p>
                     </div>
                 ): (            
                     <div className={styles.detailRoute}>
                         <p style={{color: 'red', fontWeight: 'bold'}}> {detailRoutes.map((route: { name: string }) => route?.name ).join(" ---> ")}</p>
-                        <p><strong>Độ dài tổng:</strong> {routeData.totalDistance} Km</p>
-                        <p><strong>Giá vé:</strong>  VND</p>               
-                       <p > 
+                        <p><strong>Độ dài tổng:</strong> {routeData.totalDistance} Km</p>       
+                       <p style={{ marginTop : '2.5rem'}}> 
                             <span style={{backgroundColor: 'rgb(255, 221, 231)', fontWeight: 'bold', padding: '2px', marginRight: '5px'}}>Các trạm đi qua: </span>
                             {detailStops.map((stop: { name: string }) => stop?.name ).join(" ---> ")}
                        </p>
                     </div>
-                )}
-          
-          
+                )}   
         </div>
       )
     },
@@ -244,8 +243,9 @@ const detailStops = routeData.stopId.map((id: string) => busAllStop.find(stop =>
                         <Popup>Vị trí hiện tại của bạn</Popup>
                       </Marker>
                     )} 
+
                 <Polyline key={`${routeData.busRouteId.join("-")}`}
-                    positions={routeData.stopCoor.map((coord: { latitude: number; longitude: number }) => [coord.latitude, coord.longitude])} color={routeData.totalDistance == (shortestDistance ?? -1) ? 'red' :'blue' }  weight={7} 
+                    positions={routeCoords} color={colors }  weight={7} 
                 />
 
               </MapContainer>

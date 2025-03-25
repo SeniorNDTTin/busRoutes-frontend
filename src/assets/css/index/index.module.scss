@@ -93,6 +93,8 @@
                 .map{
                     width: 100%;
                     height: 100%;
+
+                  
                 }
         }
      }
@@ -101,12 +103,28 @@
         .content{
             width: 100%;
             .listRoute{
-                max-height: 100vh;
+                max-height: 81vh;
                 overflow-y: auto;
                 width: 100%;
                 padding-right: 15px;
                 margin-top: 1rem;
                
+                .wrapperNote{
+                    width: 60%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1.5rem;
+                    .pipe{
+                        width: 30%;
+                        height: 1.5vh;
+                        background-color: red;
+                        border-radius: 5px;
+                    }
+                    .note{
+                        width: 66%;
+                    }
+                }
                 .itemRoute{
                     width: 100%;
                     display: flex;
@@ -118,6 +136,9 @@
                        background-color: rgba(204, 204, 204, 0.3);
                        border-radius: 10px;
                        padding-left: 10px;
+                       .totalDistance{
+                         color: blue;
+                       }
                     }
                     .itemRoute1:hover{
                         cursor: pointer;
@@ -132,7 +153,7 @@
         background-color: aqua;
         justify-content: space-between;
         background-color:  white;
-        width: 27.9%;
+        width: 32%;
         position: absolute;
         z-index: 9000;   
         height: 112.7vh;
@@ -159,7 +180,7 @@
      }
 
      .buttonEvent.open{
-        margin-left: 24.5rem;
+        margin-left: 28.5rem;
         transition: margin-left -0.3s ease-in-out;
     }
 }
