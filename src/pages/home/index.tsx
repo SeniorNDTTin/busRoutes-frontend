@@ -163,8 +163,6 @@ function Home() {
 
         setBusRouteMap(listRoute);
       }
-
-     
    };
 
     fetchApi();
@@ -227,7 +225,6 @@ function Home() {
     setCombinedRoutes([...commonRoute, ...otherRouteFilter])
     // setCombinedRoutes([...commonRoute, ...otherRoute])
     
-
   }, [commonRoute, otherRoute]); 
 
   useEffect(() => {
@@ -602,26 +599,57 @@ const handleInputEnd = () => {
   setShowsuggestStart(false)
 }
 
-const findNearestBusStop = (lat: number, lng: number) => {
+// const findNearestBusStop = (lat: number, lng: number) => {
+//   if (busAllStop.length === 0) return;
+
+//   let minDistance = Infinity;
+//   let nearestStop: IBusStop | undefined;
+
+//   busAllStop.forEach((stop: IBusStop) => {
+//       const distance = HaversineDistance(lat, lng, stop.latitude, stop.longitude);
+
+//       if (distance < minDistance) {
+//           minDistance = distance;
+//           nearestStop = stop;
+//       }
+//   });
+
+//   if (nearestStop !== null) {
+//     setStartPoint({ id: nearestStop?._id ?? "", name: nearestStop?.name ?? "" });
+//   }
+// };
+
+
+const getDrivingDistance = async (lat1: number, lng1: number, lat2: number, lng2: number): Promise<number> => {
+  const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${lng1},${lat1};${lng2},${lat2}?access_token=${mapboxgl.accessToken}&geometries=geojson`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  if (data.routes && data.routes.length > 0) {
+    return data.routes[0].distance; 
+  }
+
+  return 0
+};
+
+const findNearestBusStop = async (lat: number, lng: number) => {
   if (busAllStop.length === 0) return;
 
   let minDistance = Infinity;
   let nearestStop: IBusStop | undefined;
 
-  busAllStop.forEach((stop: IBusStop) => {
-      const distance = HaversineDistance(lat, lng, stop.latitude, stop.longitude);
-
+  for (const stop of busAllStop) {
+      const distance = await getDrivingDistance(lat , lng , stop.latitude , stop.longitude)
       if (distance < minDistance) {
           minDistance = distance;
-          nearestStop = stop;;
+          nearestStop = stop;
       }
-  });
-
+  };
   if (nearestStop !== null) {
     setStartPoint({ id: nearestStop?._id ?? "", name: nearestStop?.name ?? "" });
   }
 };
-
 
 const handleCurrentLocation = () =>{
   
@@ -631,7 +659,9 @@ const handleCurrentLocation = () =>{
   }
   navigator.geolocation.getCurrentPosition (
     (position) => {
-      const { latitude, longitude } = position.coords;
+      // const { latitude, longitude } = position.coords;
+      const { latitude, longitude } = {latitude: 10.029951002761138, longitude: 105.76437002874928}
+
       setNameCurrentLocation("Vị trí hiện tại")
       setShowsuggestStart(false)
       setCurrentLocation({ latitude, longitude });
