@@ -27,6 +27,8 @@ import IDistrict from "../../interfaces/district";
 import RoutePolyline from "../../component/routePolyline";
 import FindRoutePolyline from "../../component/findRoutePolyline";
 import { direction } from "html2canvas/dist/types/css/property-descriptors/direction";
+import directionService from "../../services/direction.service";
+import IDirection from "../../interfaces/direction";
 
 
 
@@ -64,6 +66,8 @@ function Home() {
    const [wards, setWards] = useState<IWard[]>([])
    const [districts, setDistricts] = useState<IDistrict[]>([])
 
+   const [direction , setDirection] = useState<IDirection[]>([])
+
    const [showSuggestStart, setShowsuggestStart] = useState(false)
    const [showSuggestEnd, setShowsuggestEnd] = useState(false)
 
@@ -77,6 +81,7 @@ function Home() {
 
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [nameCurrentLocation, setNameCurrentLocation] = useState("");
+
   const colors = ["blue", "#ff5d96", "#52e9a5", "purple", "orange", "brown", "#ff9cb6"];
 
   const busIcon = L.divIcon({
@@ -110,12 +115,14 @@ function Home() {
   
   useEffect(() => {
     const fetchApi = async () => {
-      const [stop, busRoutes] = await Promise.all([
+      const [stop, busRoutes , dir] = await Promise.all([
         busStopService.get(),
-        busRouteService.get()
+        busRouteService.get(),
+        directionService.get()
       ])
       setBusStop(stop?.data ? stop.data : busStop)
       setBusAllStop(stop?.data ? stop.data : busAllStop)
+      setDirection(dir?.data ? dir.data : direction)
 
       setBusRoute(busRoutes?.data ? busRoutes.data : busRoute)
 
@@ -211,10 +218,14 @@ function Home() {
       // );
       const filterStops = busAllStop.filter(stop => stop._id === startPoint.id || stop._id === endPoint.id)
       setBusStop(filterStops);
+      
     } else {
       setBusStop(busAllStop);
     }
-    setCombinedRoutes([...commonRoute, ...otherRoute])
+    
+    const otherRouteFilter = otherRoute.filter(other => other.busRouteId.length > 1)
+    setCombinedRoutes([...commonRoute, ...otherRouteFilter])
+    // setCombinedRoutes([...commonRoute, ...otherRoute])
     
 
   }, [commonRoute, otherRoute]); 
@@ -363,118 +374,224 @@ const toggelePanal = () => {
       return d
   }
 
-  const Search = async () => {
-    if (!startPoint.name || !endPoint.name) {
-      toast.error("Vui lòng chọn điểm đi và điểm đến");
-      return;
-    }
+  // const Search = async () => {
+  //   if (!startPoint.name || !endPoint.name) {
+  //     toast.error("Vui lòng chọn điểm đi và điểm đến");
+  //     return;
+  //   }
      
-    const stopToRoutes = new Map<string, Set<string>>(); 
-    const busRouteMap = new Map<string, Set<string>>();  
+  //   const stopToRoutes = new Map<string, Set<string>>(); 
+  //   const busRouteMap = new Map<string, Set<string>>();  
     
-    for (const detail of busRouteDetail) {
-      if (!stopToRoutes.has(detail.busStopId)) {
-        stopToRoutes.set(detail.busStopId, new Set());
-      }
-      stopToRoutes.get(detail.busStopId)?.add(detail.busRouteId);
+  //   for (const detail of busRouteDetail) {
+  //     if (!stopToRoutes.has(detail.busStopId)) {
+  //       stopToRoutes.set(detail.busStopId, new Set());
+  //     }
+  //     stopToRoutes.get(detail.busStopId)?.add(detail.busRouteId);
   
-      if (!busRouteMap.has(detail.busRouteId)) {
-        busRouteMap.set(detail.busRouteId, new Set());
-      }
-      busRouteMap.get(detail.busRouteId)?.add(detail.busStopId);
-    }
-    console.log("busRouteMap", busRouteMap)
+  //     if (!busRouteMap.has(detail.busRouteId)) {
+  //       busRouteMap.set(detail.busRouteId, new Set());
+  //     }
+  //     busRouteMap.get(detail.busRouteId)?.add(detail.busStopId);
+  //   }
+  //   console.log("busRouteMap", busRouteMap)
   
    
-    const queue: { busRouteId: string[], stopId: string[], path: string[] }[] = [];
-    const visitedRoutes = new Set<string>(); 
-    const commonRoutesData = [];
-    const otherRoutesData = [];
+  //   const queue: { busRouteId: string[], stopId: string[], path: string[] }[] = [];
+  //   const visitedRoutes = new Set<string>(); 
+  //   const commonRoutesData = [];
+  //   const otherRoutesData = [];
   
-    for (const routeId of stopToRoutes.get(startPoint.id) || []) {
-      const routeStops = Array.from(busRouteMap.get(routeId) || []);
-      const startIndex = routeStops.indexOf(startPoint.id);
-      const endIndex = routeStops.indexOf(endPoint.id);
+  //   for (const routeId of stopToRoutes.get(startPoint.id) || []) {
+  //     const routeStops = Array.from(busRouteMap.get(routeId) || []);
+  //     const startIndex = routeStops.indexOf(startPoint.id);
+  //     const endIndex = routeStops.indexOf(endPoint.id);
   
+
+  //     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+  //       const stopIds = routeStops.slice(startIndex, endIndex + 1);
+      
+  //       const stopCoordinates = await Promise.all(
+  //         stopIds.map(async (stop) => {
+  //           const { latitude, longitude} = (await busStopService.getById(stop)).data;
+  //           return { latitude, longitude};
+  //         })
+  //       );
+  //       const list = (await busRouteDetailService.getByRouteId(routeId)).data;
+  //       const totalDistance = list.reduce((sum, stop) => sum + (stop.distancePre || 0), 0);   
+       
+  //       commonRoutesData.push({ busRouteId: [routeId], stopId: stopIds, stopCoor: stopCoordinates , totalDistance: totalDistance});
+  //     }
+  
+  //     const stopIds = routeStops.slice(startIndex);
+  //     queue.push({ busRouteId: [routeId], stopId: stopIds, path: [routeId] });
+  //     visitedRoutes.add(routeId);
+  //   }
+  
+  //   while (queue.length > 0) {
+  //     const { busRouteId, stopId, path } = queue.shift()!;
+  //     const lastStop = stopId[stopId.length - 1];
+    
+  //     if (lastStop === endPoint.id) {
+  //       const stopCoordinates = await Promise.all(
+  //         stopId.map(async (stop) => {
+  //           const { latitude, longitude } = (await busStopService.getById(stop)).data;
+  //           return { latitude, longitude };
+  //         })
+  //       );
+
+  //       const totalDistance = stopCoordinates.reduce((distancePre, stopCur, index , arr) => {
+  //           if(index === 0 ) return 0;
+  //           const distance = HaversineDistance(arr[index - 1].latitude, arr[index - 1].longitude, stopCur.latitude, stopCur.longitude)
+  //           return distancePre + distance
+  //       }, 0)
+        
+  //       if (busRouteId.length > 1) {
+         
+  //         otherRoutesData.push({ busRouteId, stopId, stopCoor: stopCoordinates, totalDistance: totalDistance });
+  //       }
+  //       continue;
+  //     }
+    
+  //     for (const nextRoute of stopToRoutes.get(lastStop) || []) {
+  //       if (visitedRoutes.has(nextRoute)) continue;
+        
+
+  //       const nextRouteStops = Array.from(busRouteMap.get(nextRoute) || []);
+  //       const endPointIndex = nextRouteStops.indexOf(endPoint.id);
+    
+  //       const lastIntersection = stopId.find(stop => nextRouteStops.includes(stop));
+    
+  //       if (lastIntersection) {
+  //         const intersectionIndex = nextRouteStops.indexOf(lastIntersection);
+    
+  //         if (intersectionIndex < endPointIndex) {
+  //           visitedRoutes.add(nextRoute);
+    
+  //           const newPath = [...path, nextRoute];
+  //           const newStopId = [...stopId];
+    
+  //           for (const stop of nextRouteStops) {
+  //             if (!newStopId.includes(stop)) {
+  //               newStopId.push(stop);
+  //             }
+  //           }
+    
+  //           queue.push({ busRouteId: [...busRouteId, nextRoute], stopId: newStopId, path: newPath });
+  //         }
+  //       }
+  //     }
+  //   }
+    
+  //   setCommonRoute(commonRoutesData);
+  //   setOtherRoute(otherRoutesData);
+  // };
+
+
+  const Search = async () => {
+  if (!startPoint.name || !endPoint.name) {
+    toast.error("Vui lòng chọn điểm đi và điểm đến");
+    return;
+  }
+
+  const stopToRoutes = new Map();
+  const busRouteMap = new Map();
+
+  for (const detail of busRouteDetail) {
+    if (!stopToRoutes.has(detail.busStopId)) {
+      stopToRoutes.set(detail.busStopId, new Set());
+    }
+    stopToRoutes.get(detail.busStopId).add(detail.busRouteId);
+
+    const dir = direction.find(d => d._id === detail.directionId);
+
+    if (!busRouteMap.has(detail.busRouteId)) {
+      busRouteMap.set(detail.busRouteId, { forward: new Set(), reverse: new Set() });
+    }
+
+    if (dir) {
+      const route = busRouteMap.get(detail.busRouteId);
+      if (dir.description === 'Lượt đi') {
+        route.forward.add(detail.busStopId);
+      } else {
+        route.reverse.add(detail.busStopId);
+      }
+    }
+  }
+
+  const queue: { busRouteId: string[], stopId: string[], path: string[] }[] = [];
+  const visitedRoutes = new Set();
+  const commonRoutesData = [];
+  const otherRoutesData = [];
+
+  for (const routeId of stopToRoutes.get(startPoint.id) || []) {
+    const routeData = busRouteMap.get(routeId);
+    if (!routeData) continue;
+
+    for (const direction of ['forward', 'reverse']) {
+      const stops = Array.from(routeData[direction]);
+      const startIndex = stops.indexOf(startPoint.id);
+      const endIndex = stops.indexOf(endPoint.id);
 
       if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-        const stopIds = routeStops.slice(startIndex, endIndex + 1);
-      
+        const stopIds = stops.slice(startIndex, endIndex + 1) as string[];
         const stopCoordinates = await Promise.all(
-          stopIds.map(async (stop) => {
-            const { latitude, longitude} = (await busStopService.getById(stop)).data;
-            return { latitude, longitude};
-          })
+          stopIds.map(async stop => (await busStopService.getById(stop as string)).data)
         );
-        const list = (await busRouteDetailService.getByRouteId(routeId)).data;
-        const totalDistance = list.reduce((sum, stop) => sum + (stop.distancePre || 0), 0);   
-       
-        commonRoutesData.push({ busRouteId: [routeId], stopId: stopIds, stopCoor: stopCoordinates , totalDistance: totalDistance});
+        const totalDistance = (await busRouteDetailService.getByRouteId(routeId)).data
+          .reduce((sum, stop) => sum + (stop.distancePre || 0), 0);
+
+        commonRoutesData.push({ busRouteId: [routeId], stopId: stopIds, stopCoor: stopCoordinates, totalDistance });
       }
-  
-      const stopIds = routeStops.slice(startIndex);
-      queue.push({ busRouteId: [routeId], stopId: stopIds, path: [routeId] });
+      queue.push({ busRouteId: [routeId], stopId: stops.slice(startIndex) as string[], path: [routeId] });
       visitedRoutes.add(routeId);
     }
-  
-    while (queue.length > 0) {
-      const { busRouteId, stopId, path } = queue.shift()!;
-      const lastStop = stopId[stopId.length - 1];
-    
-      if (lastStop === endPoint.id) {
-        const stopCoordinates = await Promise.all(
-          stopId.map(async (stop) => {
-            const { latitude, longitude } = (await busStopService.getById(stop)).data;
-            return { latitude, longitude };
-          })
-        );
+  }
 
-        const totalDistance = stopCoordinates.reduce((distancePre, stopCur, index , arr) => {
-            if(index === 0 ) return 0;
-            const distance = HaversineDistance(arr[index - 1].latitude, arr[index - 1].longitude, stopCur.latitude, stopCur.longitude)
-            return distancePre + distance
-        }, 0)
-        
-        if (busRouteId.length > 1) {
-         
-          otherRoutesData.push({ busRouteId, stopId, stopCoor: stopCoordinates, totalDistance: totalDistance });
-        }
-        continue;
-      }
-    
-      for (const nextRoute of stopToRoutes.get(lastStop) || []) {
-        if (visitedRoutes.has(nextRoute)) continue;
-        
+  while (queue.length > 0) {
+    const { busRouteId, stopId, path } = queue.shift()!;
+    const lastStop = stopId[stopId.length - 1];
+    if (lastStop === endPoint.id) {
+      const stopCoordinates = await Promise.all(
+        stopId.map(async stop => (await busStopService.getById(stop)).data)
+      );
+      const totalDistance = stopCoordinates.reduce((sum, cur, idx, arr) => {
+        if (idx === 0) return 0;
+        return sum + HaversineDistance(arr[idx - 1].latitude, arr[idx - 1].longitude, cur.latitude, cur.longitude);
+      }, 0);
 
-        const nextRouteStops = Array.from(busRouteMap.get(nextRoute) || []);
-        const endPointIndex = nextRouteStops.indexOf(endPoint.id);
-    
-        const lastIntersection = stopId.find(stop => nextRouteStops.includes(stop));
-    
-        if (lastIntersection) {
-          const intersectionIndex = nextRouteStops.indexOf(lastIntersection);
-    
+      otherRoutesData.push({ busRouteId, stopId, stopCoor: stopCoordinates, totalDistance });
+      continue;
+    }
+
+    for (const nextRoute of stopToRoutes.get(lastStop) || []) {
+      if (visitedRoutes.has(nextRoute)) continue;
+
+      const nextRouteData = busRouteMap.get(nextRoute);
+      if (!nextRouteData) continue;
+
+      for (const direction of ['forward', 'reverse']) {
+        const nextStops = Array.from(nextRouteData[direction]);
+        const intersection = stopId.find(stop => nextStops.includes(stop));
+
+        if (intersection) {
+          const intersectionIndex = nextStops.indexOf(intersection);
+          const endPointIndex = nextStops.indexOf(endPoint.id);
+
           if (intersectionIndex < endPointIndex) {
             visitedRoutes.add(nextRoute);
-    
             const newPath = [...path, nextRoute];
-            const newStopId = [...stopId];
-    
-            for (const stop of nextRouteStops) {
-              if (!newStopId.includes(stop)) {
-                newStopId.push(stop);
-              }
-            }
-    
-            queue.push({ busRouteId: [...busRouteId, nextRoute], stopId: newStopId, path: newPath });
+            const newStopId = [...stopId, ...nextStops.slice(intersectionIndex + 1)];
+            queue.push({ busRouteId: [...busRouteId, nextRoute], stopId: newStopId as string[], path: newPath });
           }
         }
       }
     }
-    
-    setCommonRoute(commonRoutesData);
-    setOtherRoute(otherRoutesData);
-  };
+  }
+
+  setCommonRoute(commonRoutesData);
+  setOtherRoute(otherRoutesData);
+};
 
 const handleInputStart = () => {
   setShowsuggestStart (true)
@@ -692,11 +809,16 @@ const handleSelect = (id: string , name : string ) => {
           
           {combinedRoutes.length > 0 ?
            (
+            
             <div className={styles.listRoute}>
+                <div className={styles.wrapperNote}>
+                  <div className={styles.pipe}>.</div>
+                  <div className={styles.note}> : Tuyến đường ngắn nhất</div>
+                </div>
                       {commonRoute.length > 0 ? (
                         <div className={styles.itemRoute}>
                           <p > <strong>Các Tuyến Trực Tiếp : </strong>{startPoint.name} <RightCircleTwoTone/> {endPoint.name}</p>
-                          {combinedRoutes.filter(route => route.busRouteId.length === 1) .map((route , index) => {
+                          {commonRoute.map((route , index) => {
                               let matchedRoutes = busRoute.filter(r => route.busRouteId.includes(r._id));
                               matchedRoutes = matchedRoutes.sort((a, b) => a.fullDistance - b.fullDistance);
                               const shortestDistance = shortestRoute && shortestRoute.length > 0 ?  shortestRoute[0].totalDistance : 0
@@ -707,7 +829,7 @@ const handleSelect = (id: string , name : string ) => {
                                       <p style={{color: 'red' , fontWeight: 'bold'}} >
                                           {matchedRoutes.map(r => r.name).join("")}
                                       </p>
-                                      <p><strong>Độ dài tuyến:</strong> {r.fullDistance} Km</p>
+                                      <p><strong>Độ dài toàn tuyến:</strong> {r.fullDistance} Km</p>
                                      <p><strong>Giá vé:</strong> {formatCurrency(r.fullPrice)} VND</p>
                                      <p><strong>Thời gian tuyến:</strong> {r.time}</p>
                                 </div>)) : (<div></div>)
@@ -729,8 +851,8 @@ const handleSelect = (id: string , name : string ) => {
                                     <p style={{color: 'red' , fontWeight: 'bold'}} >
                                           { matchedRoutes.map(r => r.name).join(" ---> ")}
                                     </p>
-                                    <p><strong>Độ dài: </strong>{route.totalDistance} Km</p>
-                                    <p><strong>Giá vé: </strong></p>                 
+                                    <p><strong>Độ dài toàn tuyến: </strong>{route.totalDistance} Km</p>
+                                    {/* <p><strong>Giá vé: </strong></p>                  */}
                                 </div>                 
                             ) : (<div></div>)
                           })}

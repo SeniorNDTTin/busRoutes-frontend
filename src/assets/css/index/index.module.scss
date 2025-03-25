@@ -109,6 +109,22 @@
                 padding-right: 15px;
                 margin-top: 1rem;
                
+                .wrapperNote{
+                    width: 60%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1.5rem;
+                    .pipe{
+                        width: 30%;
+                        height: 1.5vh;
+                        background-color: red;
+                        border-radius: 5px;
+                    }
+                    .note{
+                        width: 66%;
+                    }
+                }
                 .itemRoute{
                     width: 100%;
                     display: flex;
