@@ -35,15 +35,10 @@ interface Position {
 const FindRouteDetail = () =>{
   const location = useLocation();
   const routeData = location.state?.routeData;
-  console.log("routeData", routeData)
   const routeDirectly = location.state?.routeDirectly;
-  console.log("routeDirectly", routeDirectly)
   const currentLocation = location.state?.currentLocation;
-  console.log("currentLocation", currentLocation)
   const routeCoords = location.state?.routeCoords;
-  console.log("routeCoords", routeCoords)
   const colors = location.state?.colors;
-  console.log("colors", colors)
 
   const navigation = useNavigate()
   const [mapPosition, setMapPosition] = useState<Position>({

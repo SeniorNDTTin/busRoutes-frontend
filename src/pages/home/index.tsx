@@ -440,8 +440,7 @@ const handleCurrentLocation = () =>{
   }
   navigator.geolocation.getCurrentPosition (
     (position) => {
-      // const { latitude, longitude } = position.coords;
-      const { latitude, longitude } = {latitude: 10.029951002761138, longitude: 105.76437002874928}
+      const { latitude, longitude } = position.coords;
 
       setNameCurrentLocation("Vị trí hiện tại")
       setShowsuggestStart(false)
@@ -629,7 +628,7 @@ const handleSelect = (id: string , name : string ) => {
                       {commonRoute.length > 0 ? (
                         <div className={styles.itemRoute}>
                           <p > <strong>Các Tuyến Trực Tiếp : </strong>{startPoint.name} <RightCircleTwoTone/> {endPoint.name}</p>
-                          {commonRoute.map((route , index) => {
+                          {commonRoute.slice().sort((a, b) => a.totalDistance - b.totalDistance).map((route , index) => {
                               let matchedRoutes = busRoute.filter(r => route.busRouteId.includes(r._id));
                               matchedRoutes = matchedRoutes.sort((a, b) => a.fullDistance - b.fullDistance);
                               const shortestDistance = shortestRoute && shortestRoute.length > 0 ?  shortestRoute[0].totalDistance : 0
@@ -652,7 +651,7 @@ const handleSelect = (id: string , name : string ) => {
                       {otherRoute.length > 0 ? (
                         <div className={styles.itemRoute}>
                           <p style={{marginTop: '2.5rem'}}> <strong>Các Tuyến Trung Gian : </strong>{startPoint.name} <RightCircleTwoTone/> {endPoint.name}</p>
-                          {combinedRoutes.filter(route => route.busRouteId.length > 1) .map((route , index) => {
+                          {combinedRoutes.filter(route => route.busRouteId.length > 1) .slice().sort((a, b) => a.totalDistance - b.totalDistance).map((route , index) => {
                             let matchedRoutes = busRoute.filter(r => route.busRouteId.includes(r._id));
                             matchedRoutes = matchedRoutes.sort((a, b) => a.fullDistance - b.fullDistance);
                             const isShortest = (shortestRoute && shortestRoute.some(r => Number(r.totalDistance) === Number(route.totalDistance))) ?? false;
